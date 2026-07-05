@@ -4,7 +4,7 @@ import threading
 from flask import Flask
 from telegram.ext import (
     Application, CommandHandler, CallbackQueryHandler,
-    MessageHandler, filters, ContextTypes, PreCheckoutQueryHandler,
+    MessageHandler, filters, ContextTypes,
 )
 
 from config import BOT_TOKEN, PORT, MAX_FILE_SIZE_MB
@@ -14,9 +14,6 @@ from handlers.file_handler import file_handler, done_command, text_param_handler
 from handlers.admin import stats_command, getemojiid_command
 from handlers.language import language_command, language_callback
 from handlers.history import history_command
-from handlers.donate import (
-    donate_command, donate_callback, precheckout_callback, successful_payment_callback,
-)
 from handlers.webapp_handler import web_app_data_handler
 from utils import stats as stats_db
 
@@ -63,9 +60,7 @@ def main():
     application.add_handler(CommandHandler("getemojiid", getemojiid_command))
     application.add_handler(CommandHandler("language", language_command))
     application.add_handler(CommandHandler("history", history_command))
-    application.add_handler(CommandHandler("donate", donate_command))
     application.add_handler(CallbackQueryHandler(language_callback, pattern="^lang_"))
-    application.add_handler(CallbackQueryHandler(donate_callback, pattern="^donate_"))
     application.add_handler(CallbackQueryHandler(button_handler))
     application.add_handler(MessageHandler(
         filters.Document.ALL | filters.PHOTO | filters.VIDEO | filters.AUDIO,
@@ -76,12 +71,10 @@ def main():
         filters.TEXT & ~filters.COMMAND,
         text_param_handler,
     ))
-    application.add_handler(PreCheckoutQueryHandler(precheckout_callback))
-    application.add_handler(MessageHandler(filters.SUCCESSFUL_PAYMENT, successful_payment_callback))
     application.add_error_handler(error_handler)
 
     logger.info("Bot polling shuru ho raha hai...")
-    application.run_polling(allowed_updates=["message", "callback_query", "pre_checkout_query"])
+    application.run_polling(allowed_updates=["message", "callback_query"])
 
 
 if __name__ == "__main__":
@@ -89,3 +82,4 @@ if __name__ == "__main__":
     # aur Telegram bot main thread me polling karega.
     threading.Thread(target=run_flask, daemon=True).start()
     main()
+    
