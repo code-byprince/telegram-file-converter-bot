@@ -8,7 +8,6 @@ from utils.helpers import new_session_dir, cleanup, is_file_too_big, human_size
 from utils import stats
 from utils.i18n import t
 from utils.rate_limit import check_rate_limit
-from utils.access import has_access
 from config import MAX_FILE_SIZE_MB
 
 # Actions jo file bhejne se pehle ek text parameter maangte hain
@@ -58,11 +57,6 @@ async def _get_incoming_file(update: Update):
 async def file_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_id = update.effective_user.id
     lang = stats.get_language(user_id)
-
-    if not has_access(user_id):
-        from handlers.donate import send_paywall
-        await send_paywall(update.message)
-        return
 
     action = context.user_data.get("pending_action")
     if not action:
@@ -363,3 +357,4 @@ async def done_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
         context.user_data.pop("pending_action", None)
         context.user_data.pop("collected_images", None)
         context.user_data.pop("img_to_pdf_dir", None)
+        
