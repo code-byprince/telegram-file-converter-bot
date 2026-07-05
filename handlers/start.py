@@ -3,7 +3,6 @@ from telegram.ext import ContextTypes
 
 from utils import stats
 from utils.i18n import t
-from utils.access import has_access
 from utils.ui import premium_emoji
 from config import WELCOME_EMOJI_ID
 
@@ -17,11 +16,6 @@ async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     context.user_data.clear()
     user = update.effective_user
     stats.log_user(user.id, user.username, user.first_name)
-
-    if not has_access(user.id):
-        from handlers.donate import send_paywall
-        await send_paywall(update.message)
-        return
 
     lang = stats.get_language(user.id)
 
@@ -43,5 +37,6 @@ async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(
         "Bas /start bhejo, category choose karo, phir file bhejo.\n"
         f"Max file size: {context.bot_data.get('max_size_mb', 20)}MB.\n\n"
-        "Commands: /start /help /done /history /language /donate /stats (admin only)"
+        "Commands: /start /help /done /history /language /stats (admin only)"
     )
+    
