@@ -36,7 +36,6 @@ async def stats_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     lines = [
         "📊 *Bot Stats*",
         f"👥 Total Users: {data['total_users']}",
-        f"💰 Unlocked (Paid) Users: {data['paid_users']}",
         f"🔄 Total Conversions: {data['total_conversions']}",
         f"🟢 Aaj Active: {data['active_today']}",
         "",
@@ -68,3 +67,4 @@ async def getemojiid_command(update: Update, context: ContextTypes.DEFAULT_TYPE)
         "⚠️ Zaroori: sirf apne Telegram ke emoji picker se select karke bhejna hai — "
         "copy-paste ya forward karne se ID nahi milegi, entity data chala jata hai."
     )
+    
