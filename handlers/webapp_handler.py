@@ -3,18 +3,12 @@ from telegram import Update
 from telegram.ext import ContextTypes
 
 from utils import stats
-from utils.access import has_access
 from handlers.file_handler import PARAM_PROMPTS, DIRECT_PROMPTS
 
 
 async def web_app_data_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Jab user Mini App (Web App) me button dabata hai, yeh data yahan aata hai."""
     user_id = update.effective_user.id
-
-    if not has_access(user_id):
-        from handlers.donate import send_paywall
-        await send_paywall(update.message)
-        return
 
     try:
         data = json.loads(update.effective_message.web_app_data.data)
@@ -41,3 +35,4 @@ async def web_app_data_handler(update: Update, context: ContextTypes.DEFAULT_TYP
         return
 
     await update.message.reply_text("❌ Yeh action pehchana nahi gaya.")
+    
