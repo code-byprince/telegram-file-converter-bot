@@ -11,37 +11,37 @@ from utils.ui import styled_button
 # style=None matlab default/white button, "primary"=blue, "success"=green, "danger"=red
 IMAGE_MENU = [
     [styled_button("→ JPG", "action_img_to_jpg", "primary"),
-     styled_button("→ PNG", "action_img_to_png", None)],
+     styled_button("→ PNG", "action_img_to_png", "danger")],
     [styled_button("→ WEBP", "action_img_to_webp", "primary"),
      styled_button("Compress", "action_img_compress", "success")],
-    [styled_button("Resize", "action_img_resize", None)],
+    [styled_button("Resize", "action_img_resize", "success")],
     [styled_button("Images → PDF", "action_img_to_pdf", "success")],
     [styled_button("PDF → Images", "action_pdf_to_img", "primary")],
-    [styled_button("⬅️ Back", "menu_main", None)],
+    [styled_button("⬅️ Back", "menu_main", "success")],
 ]
 
 DOCUMENT_MENU = [
-    [styled_button("PDF → Text", "action_pdf_to_text", None),
+    [styled_button("PDF → Text", "action_pdf_to_text", "success"),
      styled_button("Text → PDF", "action_text_to_pdf", "primary")],
-    [styled_button("PDF → Word", "action_pdf_to_word", None),
+    [styled_button("PDF → Word", "action_pdf_to_word", "danger"),
      styled_button("Word → PDF", "action_word_to_pdf", "primary")],
     [styled_button("Merge PDFs", "action_pdf_merge", "success"),
      styled_button("Split PDF", "action_pdf_split", "primary")],
     [styled_button("🔒 Add Password", "action_pdf_add_password", "success"),
      styled_button("🔓 Remove Password", "action_pdf_remove_password", "danger")],
-    [styled_button("⬅️ Back", "menu_main", None)],
+    [styled_button("⬅️ Back", "menu_main", "primary")],
 ]
 
 EXCEL_MENU = [
     [styled_button("Excel → CSV", "action_excel_to_csv", "primary")],
-    [styled_button("CSV → Excel", "action_csv_to_excel", None)],
-    [styled_button("⬅️ Back", "menu_main", None)],
+    [styled_button("CSV → Excel", "action_csv_to_excel", "danger")],
+    [styled_button("⬅️ Back", "menu_main", "success")],
 ]
 
 VIDEO_MENU = [
     [styled_button("Video → MP3", "action_vid_to_audio", "primary")],
     [styled_button("Video Compress", "action_vid_compress", "success")],
-    [styled_button("⬅️ Back", "menu_main", None)],
+    [styled_button("⬅️ Back", "menu_main", "success")],
 ]
 
 
