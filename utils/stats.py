@@ -25,20 +25,15 @@ def init_db():
                 username TEXT,
                 first_name TEXT,
                 first_seen TEXT,
-                language TEXT DEFAULT 'hi',
-                is_paid INTEGER DEFAULT 0
+                language TEXT DEFAULT 'hi'
             )
         """)
-        # Purani DB me agar yeh columns nahi hain, toh add kar do (safe migration)
-        for column_sql in (
-            "ALTER TABLE users ADD COLUMN language TEXT DEFAULT 'hi'",
-            "ALTER TABLE users ADD COLUMN is_paid INTEGER DEFAULT 0",
-        ):
-            try:
-                conn.execute(column_sql)
-                conn.commit()
-            except sqlite3.OperationalError:
-                pass  # column already exists
+        # Purani DB me agar language column nahi hai, toh add kar do (safe migration)
+        try:
+            conn.execute("ALTER TABLE users ADD COLUMN language TEXT DEFAULT 'hi'")
+            conn.commit()
+        except sqlite3.OperationalError:
+            pass  # column already exists
         conn.execute("""
             CREATE TABLE IF NOT EXISTS feature_usage (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -93,24 +88,6 @@ def set_language(user_id: int, lang: str):
         conn.close()
 
 
-def is_user_paid(user_id: int) -> bool:
-    """True return karta hai agar user ne kabhi donate karke unlock kiya hai."""
-    with _lock:
-        conn = _get_conn()
-        row = conn.execute("SELECT is_paid FROM users WHERE user_id = ?", (user_id,)).fetchone()
-        conn.close()
-    return bool(row and row[0])
-
-
-def mark_user_paid(user_id: int):
-    """Donation ke baad user ko unlock kar deta hai."""
-    with _lock:
-        conn = _get_conn()
-        conn.execute("UPDATE users SET is_paid = 1 WHERE user_id = ?", (user_id,))
-        conn.commit()
-        conn.close()
-
-
 def get_history(user_id: int, limit: int = 5) -> list:
     """User ki last N conversions return karta hai (feature, used_at)."""
     with _lock:
@@ -132,7 +109,6 @@ def get_stats() -> dict:
         active_today = conn.execute(
             "SELECT COUNT(DISTINCT user_id) FROM feature_usage WHERE used_at >= date('now')"
         ).fetchone()[0]
-        paid_users = conn.execute("SELECT COUNT(*) FROM users WHERE is_paid = 1").fetchone()[0]
         feature_breakdown = conn.execute(
             "SELECT feature, COUNT(*) as cnt FROM feature_usage GROUP BY feature ORDER BY cnt DESC"
         ).fetchall()
@@ -141,6 +117,6 @@ def get_stats() -> dict:
         "total_users": total_users,
         "total_conversions": total_conversions,
         "active_today": active_today,
-        "paid_users": paid_users,
         "feature_breakdown": feature_breakdown,
     }
+    
